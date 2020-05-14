@@ -9,7 +9,8 @@ class ConnectFTP:
         self.password = passwd
         self.ip_address = ip
         self.client = self.conn(self.user, self.password,  self.ip_address)
-        self.path= self.pwd_def()
+        self.ftp = self.client.open_sftp()
+        self.path = None
 
     def conn(self, user, password, ip):
         client = paramiko.SSHClient()
@@ -26,13 +27,7 @@ class ConnectFTP:
             msg.setText("Authentication failed")
         return client
 
-    def get_ls_dir(self, path='.'):
-        with self.client.invoke_shell() as ssh:
-            ftp = self.client.open_sftp()
-            files = ftp.listdir(path)
-        return files, path
-
-    def pwd_def(self, path):
-        stdin, stdout, stderr = self.client.exec_command("pwd")
-        print(stdin, stdout, stderr)
-        return stdout
+    def get_ls_dir(self, path='/'):
+        files = self.ftp.listdir(path)
+        self.path = path
+        return files
