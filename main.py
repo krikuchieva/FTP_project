@@ -1,11 +1,11 @@
 import sys
 import re
 from PyQt5.QtGui import QIcon
-import connect
+from connect import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from main_qt import Ui_MainWindow
-
+import sqlite3
 
 class MainClassProject(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -23,6 +23,7 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
         self.local_list.doubleClicked.connect(self.double_click_locallost)
         self.local_to_remote.clicked.connect(self.local_to_remote_copy)
         self.remote_to_local.clicked.connect(self.remote_to_local_copy)
+        self.actionNew.triggered.connect(self.click_new)
 
     def show_all_flies(self, path='/'):
         try:
@@ -54,7 +55,7 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
         ip_cheack = re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", self.ip_line.text())
         if self.username_line.text() and self.password_line.text() and ip_cheack:
             try:
-                self.client = connect.ConnectFTP(self.username_line.text(), self.password_line.text(), self.ip_line.text())
+                self.client = ConnectFTP(self.username_line.text(), self.password_line.text(), self.ip_line.text())
                 self.show_all_flies()
             except Exception as e:
                 msg = QMessageBox()
@@ -99,8 +100,15 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
                 self.client.ftp.put(self.dirModel.filePath(self.local_list.currentIndex()),
                                         self.client.path + "/" +
                                             self.dirModel.fileInfo(self.local_list.currentIndex()).fileName())
+
                 self.remote_list.clear()
                 self.show_all_flies(self.client.path)
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Information)
+                msg.setInformativeText('Files send')
+                msg.setWindowTitle("OK")
+                msg.exec_()
+
         except Exception as e:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
@@ -120,6 +128,10 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
             msg.setInformativeText(str(e))
             msg.setWindowTitle("Error")
             msg.exec_()
+
+    def click_new(self):
+        self.windows_new_con = NewConnect()
+        self.windows_new_con.show()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

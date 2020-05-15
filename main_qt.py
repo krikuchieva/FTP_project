@@ -83,7 +83,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "FTP"))
         self.groupBox.setTitle(_translate("MainWindow", "Local site"))
         self.groupBox_2.setTitle(_translate("MainWindow", "Remote site"))
         self.ip_line.setText(_translate("MainWindow", "192.168.106.166"))
