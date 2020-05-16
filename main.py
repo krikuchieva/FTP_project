@@ -29,6 +29,39 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
         self.actionOpen.triggered.connect(self.click_open)
         self.actionAbout_Project.triggered.connect(self.about_click)
         self.actionExit.triggered.connect(sys.exit)
+        self.button_action_new = QAction(QIcon("img/file.png"), "New connection", self)
+        self.button_action_new.triggered.connect(self.click_new)
+        self.button_action_new.setCheckable(True)
+        self.toolBar.addAction(self.button_action_new)
+        self.toolBar.addSeparator()
+
+        self.button_action_open = QAction(QIcon("img/conn.png"), "Open connection", self)
+        self.button_action_open.triggered.connect(self.click_open)
+        self.button_action_open.setCheckable(True)
+        self.toolBar.addAction(self.button_action_open)
+        self.toolBar.addSeparator()
+
+        self.button_action_discon = QAction(QIcon("img/disconn.png"), "Close connection", self)
+        self.button_action_discon.triggered.connect(self.disconn)
+        self.button_action_discon.setCheckable(True)
+        self.toolBar.addAction(self.button_action_discon)
+        self.toolBar.addSeparator()
+
+        self.button_action_about = QAction(QIcon("img/about.png"), "About", self)
+        self.button_action_about.triggered.connect(self.about_click)
+        self.button_action_about.setCheckable(True)
+        self.toolBar.addAction(self.button_action_about)
+        self.toolBar.addSeparator()
+
+        self.button_action_exit = QAction(QIcon("img/exit.png"), "Exit", self)
+        self.button_action_exit.triggered.connect(sys.exit)
+        self.button_action_exit.setCheckable(True)
+        self.toolBar.addAction(self.button_action_exit)
+        self.toolBar.addSeparator()
+
+
+
+
 
     def show_all_flies(self, path='/'):
         try:
@@ -74,6 +107,9 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
             self.client.client.close()
             self.remote_list.clear()
             self.client = None
+            self.ip_line.setText('Enter ip address')
+            self.password_line.setText('Enter password')
+            self.username_line.setText('Enter username')
         else:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
