@@ -14,6 +14,8 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(993, 634)
+        MainWindow.setMinimumSize(QtCore.QSize(993, 634))
+        MainWindow.setMaximumSize(QtCore.QSize(993, 634))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
@@ -73,8 +75,11 @@ class Ui_MainWindow(object):
         self.actionNew.setObjectName("actionNew")
         self.actionOpen = QtWidgets.QAction(MainWindow)
         self.actionOpen.setObjectName("actionOpen")
+        self.actionAbout_Project = QtWidgets.QAction(MainWindow)
+        self.actionAbout_Project.setObjectName("actionAbout_Project")
         self.menuFile.addAction(self.actionNew)
         self.menuFile.addAction(self.actionOpen)
+        self.menuAbout.addAction(self.actionAbout_Project)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuAbout.menuAction())
 
@@ -97,3 +102,4 @@ class Ui_MainWindow(object):
         self.menuAbout.setTitle(_translate("MainWindow", "About"))
         self.actionNew.setText(_translate("MainWindow", "New"))
         self.actionOpen.setText(_translate("MainWindow", "Open"))
+        self.actionAbout_Project.setText(_translate("MainWindow", "About Project"))

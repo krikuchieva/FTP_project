@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
 from new_con import Ui_Form
 import sqlite3
+import about_qt
 
 class ConnectFTP:
     def __init__(self, username, passwd, ip):
@@ -12,7 +13,6 @@ class ConnectFTP:
         self.client = self.conn(self.user, self.password,  self.ip_address)
         self.ftp = self.client.open_sftp()
         self.path = None
-        print(type(self.ftp))
 
     def conn(self, user, password, ip):
         client = paramiko.SSHClient()
@@ -35,13 +35,13 @@ class ConnectFTP:
         return files
 
 
-
 class NewConnect(QtWidgets.QWidget, Ui_Form):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.setGeometry(900, 200,0, 0)
+        self.setGeometry(900, 200, 0, 0)
         self.ok_button.clicked.connect(self.ok_button_click)
+        self.cancel_button.clicked.connect(self.close)
         self.conn_sql = None
         self.cursor = None
 
@@ -56,13 +56,30 @@ class NewConnect(QtWidgets.QWidget, Ui_Form):
                 self.cursor.close()
                 self.conn_sql.commit()
                 self.cursor = None
+                self.conn_sql.close()
+                self.conn_sql = None
+                self.host_addr_line.clear()
+                self.user_name_line.clear()
+                self.name_line.clear()
+                self.password_line.clear()
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Information)
+                msg.setInformativeText('Record created')
+                msg.setWindowTitle("OK")
+                msg.exec_()
+                self.close()
+            else:
+                raise Exception("Enter all lines")
         except Exception as e:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
             msg.setInformativeText(str(e))
             msg.setWindowTitle("Error")
             msg.exec_()
-        finally:
-            self.conn_sql.close()
-            self.conn_sql = None
 
+
+class About(QtWidgets.QWidget, about_qt.Ui_Form):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        self.setGeometry(900, 200, 0, 0)

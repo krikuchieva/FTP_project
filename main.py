@@ -5,12 +5,13 @@ from connect import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from main_qt import Ui_MainWindow
-import sqlite3
+from main_open_connection import *
 
 class MainClassProject(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.setGeometry(600, 150, 0, 0)
         path = QDir.homePath()
         self.dirModel = QFileSystemModel()
         self.dirModel.setRootPath(QDir.rootPath())
@@ -24,6 +25,8 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
         self.local_to_remote.clicked.connect(self.local_to_remote_copy)
         self.remote_to_local.clicked.connect(self.remote_to_local_copy)
         self.actionNew.triggered.connect(self.click_new)
+        self.actionOpen.triggered.connect(self.click_open)
+        self.actionAbout_Project.triggered.connect(self.about_click)
 
     def show_all_flies(self, path='/'):
         try:
@@ -132,6 +135,16 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
     def click_new(self):
         self.windows_new_con = NewConnect()
         self.windows_new_con.show()
+
+    def click_open(self):
+        self.windows_open = OpenConnect()
+        self.windows_open.show()
+
+    def about_click(self):
+        self.windows_about = About()
+        self.windows_about.show()
+
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
