@@ -5,7 +5,7 @@ from connect import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from main_qt import Ui_MainWindow
-from main_open_connection import *
+
 
 class MainClassProject(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -18,6 +18,7 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
         self.dirModel.setFilter(QDir.AllDirs | QDir.Files | QDir.NoDot)
         self.local_list.setModel(self.dirModel)
         self.client = None
+        self.windows_open = None
         self.connect_button.clicked.connect(self.conn_button)
         self.disconnect_but.clicked.connect(self.disconn)
         self.remote_list.itemDoubleClicked.connect(self.double_click_remotelist)
@@ -27,6 +28,7 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
         self.actionNew.triggered.connect(self.click_new)
         self.actionOpen.triggered.connect(self.click_open)
         self.actionAbout_Project.triggered.connect(self.about_click)
+        self.actionExit.triggered.connect(sys.exit)
 
     def show_all_flies(self, path='/'):
         try:
@@ -137,13 +139,12 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
         self.windows_new_con.show()
 
     def click_open(self):
-        self.windows_open = OpenConnect()
+        self.windows_open = ConnectOpen()
         self.windows_open.show()
 
     def about_click(self):
         self.windows_about = About()
         self.windows_about.show()
-
 
 
 if __name__ == '__main__':

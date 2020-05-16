@@ -4,6 +4,8 @@ from PyQt5.QtWidgets import *
 from new_con import Ui_Form
 import sqlite3
 import about_qt
+import open_connection
+import test
 
 class ConnectFTP:
     def __init__(self, username, passwd, ip):
@@ -78,8 +80,17 @@ class NewConnect(QtWidgets.QWidget, Ui_Form):
             msg.exec_()
 
 
+class ConnectOpen(QtWidgets.QWidget, open_connection.Ui_Form):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        self.setGeometry(900, 200, 0, 0)
+
+
 class About(QtWidgets.QWidget, about_qt.Ui_Form):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.setGeometry(900, 200, 0, 0)
+
+
