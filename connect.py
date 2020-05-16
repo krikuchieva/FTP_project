@@ -1,10 +1,11 @@
 import paramiko
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
-from new_con import Ui_Form
+from new_con import Ui_Form as Ui_Form_new_con
+from about_qt import Ui_Form as Ui_Form_about
+from open_connection import Ui_Form as Ui_Form_open_con
 import sqlite3
-import about_qt
-import open_connection
+
 import test
 
 class ConnectFTP:
@@ -37,7 +38,7 @@ class ConnectFTP:
         return files
 
 
-class NewConnect(QtWidgets.QWidget, Ui_Form):
+class NewConnect(QtWidgets.QWidget, Ui_Form_new_con):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -80,14 +81,14 @@ class NewConnect(QtWidgets.QWidget, Ui_Form):
             msg.exec_()
 
 
-class ConnectOpen(QtWidgets.QWidget, open_connection.Ui_Form):
+class ConnectOpen(QtWidgets.QWidget, Ui_Form_open_con):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.setGeometry(900, 200, 0, 0)
 
 
-class About(QtWidgets.QWidget, about_qt.Ui_Form):
+class About(QtWidgets.QWidget, Ui_Form_about):
     def __init__(self):
         super().__init__()
         self.setupUi(self)

@@ -14,6 +14,7 @@ class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(400, 300)
+        Form.setMinimumSize(QtCore.QSize(400, 300))
         Form.setWindowOpacity(1.0)
 
         self.retranslateUi(Form)
