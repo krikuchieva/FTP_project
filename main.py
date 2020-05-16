@@ -29,6 +29,8 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
         self.actionOpen.triggered.connect(self.click_open)
         self.actionAbout_Project.triggered.connect(self.about_click)
         self.actionExit.triggered.connect(sys.exit)
+
+
         self.button_action_new = QAction(QIcon("img/file.png"), "New connection", self)
         self.button_action_new.triggered.connect(self.click_new)
         self.button_action_new.setCheckable(True)
@@ -59,10 +61,6 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
         self.toolBar.addAction(self.button_action_exit)
         self.toolBar.addSeparator()
 
-
-
-
-
     def show_all_flies(self, path='/'):
         try:
             list_dir = self.client.get_ls_dir(path)
@@ -89,12 +87,26 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
                     item.setIcon(icon)
                     self.remote_list.addItem(item)
 
-    def conn_button(self):
-        ip_cheack = re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", self.ip_line.text())
-        if self.username_line.text() and self.password_line.text() and ip_cheack:
+    def conn_button(self, username='', password='', ip='', flag=True):
+        if flag:
+            if self.username_line.text() and self.password_line.text() and self.ip_line.text():
+                try:
+                    self.client = ConnectFTP(self.username_line.text(), self.password_line.text(), self.ip_line.text())
+                    self.show_all_flies()
+                except Exception as e:
+                    msg = QMessageBox()
+                    msg.setIcon(QMessageBox.Critical)
+                    msg.setInformativeText(str(e))
+                    msg.setWindowTitle("Error")
+                    msg.exec_()
+        else:
             try:
-                self.client = ConnectFTP(self.username_line.text(), self.password_line.text(), self.ip_line.text())
+                print(username)
+                self.client = ConnectFTP(username, password, ip)
                 self.show_all_flies()
+                self.username_line.setText(username)
+                self.ip_line.setText(ip)
+                self.password_line.setText(password)
             except Exception as e:
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Critical)
@@ -116,6 +128,7 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
             msg.setInformativeText('No active session')
             msg.setWindowTitle("Error")
             msg.exec_()
+
 
     def double_click_remotelist(self):
         text = self.remote_list.currentItem().text()
@@ -175,7 +188,7 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
         self.windows_new_con.show()
 
     def click_open(self):
-        self.windows_open = ConnectOpen()
+        self.windows_open = ConnectOpen(self.conn_button)
         self.windows_open.show()
 
     def about_click(self):

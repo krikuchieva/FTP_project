@@ -6,7 +6,6 @@ from about_qt import Ui_Form as Ui_Form_about
 from open_connection import Ui_Form as Ui_Form_open_con
 import sqlite3
 
-import test
 
 class ConnectFTP:
     def __init__(self, username, passwd, ip):
@@ -45,22 +44,20 @@ class NewConnect(QtWidgets.QWidget, Ui_Form_new_con):
         self.setGeometry(900, 200, 0, 0)
         self.ok_button.clicked.connect(self.ok_button_click)
         self.cancel_button.clicked.connect(self.close)
-        self.conn_sql = None
-        self.cursor = None
 
     def ok_button_click(self):
         try:
             if self.host_addr_line.text() and self.user_name_line.text() and self.name_line.text() and self.password_line.text():
-                self.conn_sql = sqlite3.connect("connection_list.db")
-                self.cursor = self.conn_sql.cursor()
-                self.cursor.execute("""INSERT INTO  main_table VALUES('%s', '%s', '%s', '%s')"""
+                conn_sql = sqlite3.connect("connection_list.db")
+                cursor = conn_sql.cursor()
+                cursor.execute("INSERT INTO  main_table VALUES('%s', '%s', '%s', '%s')"
                                     % (self.name_line.text(), self.host_addr_line.text(), self.user_name_line.text(),
                                         self.password_line.text()))
-                self.cursor.close()
-                self.conn_sql.commit()
-                self.cursor = None
-                self.conn_sql.close()
-                self.conn_sql = None
+                cursor.close()
+                conn_sql.commit()
+
+                conn_sql.close()
+
                 self.host_addr_line.clear()
                 self.user_name_line.clear()
                 self.name_line.clear()
@@ -81,11 +78,55 @@ class NewConnect(QtWidgets.QWidget, Ui_Form_new_con):
             msg.exec_()
 
 
-class ConnectOpen(QtWidgets.QWidget, Ui_Form_open_con):
-    def __init__(self):
+class ConnectOpen(QtWidgets.QWidget, Ui_Form_open_con ):
+    def __init__(self, main_obj: classmethod):
         super().__init__()
         self.setupUi(self)
         self.setGeometry(900, 200, 0, 0)
+        self.tableWidget.setColumnCount(3)
+        self.tableWidget.setHorizontalHeaderLabels(["Name", "Host address", "User name"])
+        self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.tableWidget.doubleClicked.connect(self.double_click_table)
+        self.init_self()
+        self.client = main_obj
+
+    def init_self(self):
+        conn_sql = sqlite3.connect("connection_list.db")
+        cursor = conn_sql.cursor()
+        cursor.execute("SELECT * FROM main_table")
+        record = cursor.fetchall()
+        self.tableWidget.setRowCount(len(record))
+        for i in range(len(record)):
+            self.tableWidget.setItem(i, 0, QTableWidgetItem(record[i][0]))
+            self.tableWidget.setItem(i, 1, QTableWidgetItem(record[i][1]))
+            self.tableWidget.setItem(i, 2, QTableWidgetItem(record[i][2]))
+        cursor.close()
+        conn_sql.close()
+
+    def connect(self, ip, username, password):
+        try:
+            client = ConnectFTP(username, password, ip)
+            self.show_all_flies()
+        except Exception as e:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Critical)
+            msg.setInformativeText(str(e))
+            msg.setWindowTitle("Error")
+            msg.exec_()
+
+    def double_click_table(self):
+        conn_sql = sqlite3.connect("connection_list.db")
+        cursor = conn_sql.cursor()
+        host_name = self.tableWidget.item(self.tableWidget.currentRow(), 1).text()
+        user_name = self.tableWidget.item(self.tableWidget.currentRow(), 2).text()
+        name = self.tableWidget.item(self.tableWidget.currentRow(), 0).text()
+        cursor.execute("SELECT password FROM main_table where name='%s' and host_name='%s' and user_name='%s'"
+                     %(name, host_name, user_name))
+        password = cursor.fetchall()[0][0]
+        self.client(user_name, password, host_name, False)
+        self.close()
+
+
 
 
 class About(QtWidgets.QWidget, Ui_Form_about):
