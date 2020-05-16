@@ -127,8 +127,6 @@ class ConnectOpen(QtWidgets.QWidget, Ui_Form_open_con ):
         self.close()
 
 
-
-
 class About(QtWidgets.QWidget, Ui_Form_about):
     def __init__(self):
         super().__init__()

@@ -1,5 +1,4 @@
 import sys
-import re
 from PyQt5.QtGui import QIcon
 from connect import *
 from PyQt5.QtWidgets import *
@@ -29,7 +28,6 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
         self.actionOpen.triggered.connect(self.click_open)
         self.actionAbout_Project.triggered.connect(self.about_click)
         self.actionExit.triggered.connect(sys.exit)
-
 
         self.button_action_new = QAction(QIcon("img/file.png"), "New connection", self)
         self.button_action_new.triggered.connect(self.click_new)
@@ -128,7 +126,6 @@ class MainClassProject(QMainWindow, Ui_MainWindow):
             msg.setInformativeText('No active session')
             msg.setWindowTitle("Error")
             msg.exec_()
-
 
     def double_click_remotelist(self):
         text = self.remote_list.currentItem().text()
