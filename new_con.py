@@ -39,6 +39,7 @@ class Ui_Form(object):
         self.user_name_line.setObjectName("user_name_line")
         self.password_line = QtWidgets.QLineEdit(self.groupBox_2)
         self.password_line.setGeometry(QtCore.QRect(150, 88, 190, 27))
+        self.password_line.setEchoMode(QtWidgets.QLineEdit.Password)
         self.password_line.setObjectName("password_line")
         self.label_3 = QtWidgets.QLabel(self.groupBox_2)
         self.label_3.setGeometry(QtCore.QRect(20, 63, 101, 17))
